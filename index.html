@@ -1,133 +1,194 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Meus Downloads</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding: 20px;
-            text-align: center;
-        }
-        .card {
-            margin: 15px auto;
-            max-width: 300px;
-        }
-        .card img {
-            max-height: 200px;
-            object-fit: cover;
-            border-radius: 8px 8px 0 0;
-        }
-        .download-btn {
-            margin-top: 10px;
-        }
-        .tab-content {
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Meus Downloads</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding: 20px;
+      text-align: center;
+    }
+    .card {
+      margin: 15px auto;
+      max-width: 300px;
+    }
+    .card img {
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px 8px 0 0;
+    }
+    .download-btn {
+      margin-top: 10px;
+    }
+    .tab-content {
+      margin-top: 20px;
+    }
+    #searchInput {
+      max-width: 400px;
+      margin: 0 auto 30px auto;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Meus Downloads</h1>
-        <ul class="nav nav-tabs" id="consoleTabs" role="tablist"></ul>
-        <div class="tab-content" id="consoleTabsContent"></div>
-    </div>
+  <div class="container">
+    <h1>Meus Downloads</h1>
 
-    <script>
-        fetch('files.json')
-            .then(response => response.json())
-            .then(data => {
-                const consoles = {};
+    <!-- Barra de pesquisa -->
+    <input
+      type="search"
+      id="searchInput"
+      class="form-control"
+      placeholder="Pesquisar arquivo..."
+      aria-label="Pesquisar arquivo"
+    />
 
-                data.forEach(item => {
-                    const match = item["nome do arquivo"].match(/\((.*?)\)/);
-                    const consoleName = match ? match[1] : "Outros";
-                    if (!consoles[consoleName]) {
-                        consoles[consoleName] = [];
-                    }
-                    consoles[consoleName].push(item);
-                });
+    <ul class="nav nav-tabs" id="consoleTabs" role="tablist"></ul>
+    <div class="tab-content" id="consoleTabsContent"></div>
+  </div>
 
-                const tabs = document.getElementById('consoleTabs');
-                const tabsContent = document.getElementById('consoleTabsContent');
-                let isFirst = true;
+  <script>
+    let consoles = {};
+    let currentConsole = null;
 
-                Object.entries(consoles).forEach(([consoleName, items], index) => {
-                    const tabId = 'tab-' + consoleName.replace(/\s+/g, '-').toLowerCase();
+    function criarTabsEConteudo(consolesData) {
+      const tabs = document.getElementById('consoleTabs');
+      const tabsContent = document.getElementById('consoleTabsContent');
+      tabs.innerHTML = '';
+      tabsContent.innerHTML = '';
 
-                    // Create tab
-                    const li = document.createElement('li');
-                    li.className = 'nav-item';
-                    const button = document.createElement('button');
-                    button.className = 'nav-link' + (isFirst ? ' active' : '');
-                    button.id = tabId + '-tab';
-                    button.dataset.bsToggle = 'tab';
-                    button.dataset.bsTarget = '#' + tabId;
-                    button.type = 'button';
-                    button.role = 'tab';
-                    button.setAttribute('aria-controls', tabId);
-                    button.setAttribute('aria-selected', isFirst ? 'true' : 'false');
-                    button.textContent = consoleName;
-                    li.appendChild(button);
-                    tabs.appendChild(li);
+      let isFirst = true;
+      for (const [consoleName, items] of Object.entries(consolesData)) {
+        const tabId = 'tab-' + consoleName.replace(/\s+/g, '-').toLowerCase();
 
-                    // Create tab pane
-                    const tabPane = document.createElement('div');
-                    tabPane.className = 'tab-pane fade' + (isFirst ? ' show active' : '');
-                    tabPane.id = tabId;
-                    tabPane.role = 'tabpanel';
-                    tabPane.setAttribute('aria-labelledby', tabId + '-tab');
+        // Criar aba
+        const li = document.createElement('li');
+        li.className = 'nav-item';
 
-                    const row = document.createElement('div');
-                    row.className = 'row justify-content-center';
+        const button = document.createElement('button');
+        button.className = 'nav-link' + (isFirst ? ' active' : '');
+        button.id = tabId + '-tab';
+        button.dataset.bsToggle = 'tab';
+        button.dataset.bsTarget = '#' + tabId;
+        button.type = 'button';
+        button.role = 'tab';
+        button.setAttribute('aria-controls', tabId);
+        button.setAttribute('aria-selected', isFirst ? 'true' : 'false');
+        button.textContent = consoleName;
 
-                    items.forEach(item => {
-                        const col = document.createElement('div');
-                        col.className = 'col-md-4';
+        button.addEventListener('shown.bs.tab', () => {
+          currentConsole = consoleName;
+        });
 
-                        const card = document.createElement('div');
-                        card.className = 'card shadow-sm';
+        li.appendChild(button);
+        tabs.appendChild(li);
 
-                        const img = document.createElement('img');
-                        img.src = item["Link da Capa"];
-                        img.alt = item["nome do arquivo"];
-                        img.className = "card-img-top";
+        // Criar conteúdo da aba
+        const tabPane = document.createElement('div');
+        tabPane.className = 'tab-pane fade' + (isFirst ? ' show active' : '');
+        tabPane.id = tabId;
+        tabPane.role = 'tabpanel';
+        tabPane.setAttribute('aria-labelledby', tabId + '-tab');
 
-                        const cardBody = document.createElement('div');
-                        cardBody.className = 'card-body';
+        const row = document.createElement('div');
+        row.className = 'row justify-content-center';
 
-                        const title = document.createElement('h5');
-                        title.className = 'card-title';
-                        title.textContent = item["nome do arquivo"];
+        items.forEach(item => {
+          const col = document.createElement('div');
+          col.className = 'col-md-4 arquivo-card';
 
-                        const downloadBtn = document.createElement('a');
-                        downloadBtn.href = item["Link do arquivo"];
-                        downloadBtn.textContent = 'Baixar';
-                        downloadBtn.className = 'btn btn-primary download-btn';
-                        downloadBtn.target = '_blank';
-                        downloadBtn.rel = 'noopener noreferrer';
+          const card = document.createElement('div');
+          card.className = 'card shadow-sm';
 
-                        cardBody.appendChild(title);
-                        cardBody.appendChild(downloadBtn);
-                        card.appendChild(img);
-                        card.appendChild(cardBody);
-                        col.appendChild(card);
-                        row.appendChild(col);
-                    });
+          const img = document.createElement('img');
+          img.src = item["Link da Capa"];
+          img.alt = item["nome do arquivo"];
+          img.className = "card-img-top";
+          img.loading = "lazy"; // Lazy load
 
-                    tabPane.appendChild(row);
-                    tabsContent.appendChild(tabPane);
+          const cardBody = document.createElement('div');
+          cardBody.className = 'card-body';
 
-                    isFirst = false;
-                });
-            })
-            .catch(error => {
-                document.getElementById('consoleTabsContent').innerHTML = "<p>Erro ao carregar os arquivos.</p>";
-                console.error('Erro ao carregar JSON:', error);
-            });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+          const title = document.createElement('h5');
+          title.className = 'card-title';
+          title.textContent = item["nome do arquivo"];
+
+          const downloadBtn = document.createElement('a');
+          downloadBtn.href = item["Link do arquivo"];
+          downloadBtn.textContent = 'Baixar';
+          downloadBtn.className = 'btn btn-primary download-btn';
+          downloadBtn.target = '_blank';
+          downloadBtn.rel = 'noopener noreferrer';
+
+          cardBody.appendChild(title);
+          cardBody.appendChild(downloadBtn);
+          card.appendChild(img);
+          card.appendChild(cardBody);
+          col.appendChild(card);
+          row.appendChild(col);
+        });
+
+        tabPane.appendChild(row);
+        tabsContent.appendChild(tabPane);
+
+        if (isFirst) {
+          currentConsole = consoleName;
+          isFirst = false;
+        }
+      }
+    }
+
+    function filtrarArquivos(texto) {
+      texto = texto.toLowerCase();
+
+      const tabs = document.getElementById('consoleTabs');
+      const tabsContent = document.getElementById('consoleTabsContent');
+      tabs.innerHTML = '';
+      tabsContent.innerHTML = '';
+
+      const consolesFiltrados = {};
+
+      for (const [consoleName, items] of Object.entries(consoles)) {
+        const itensFiltrados = items.filter(item =>
+          item["nome do arquivo"].toLowerCase().includes(texto)
+        );
+        if (itensFiltrados.length > 0) {
+          consolesFiltrados[consoleName] = itensFiltrados;
+        }
+      }
+
+      if (Object.keys(consolesFiltrados).length === 0) {
+        tabsContent.innerHTML = '<p>Nenhum arquivo encontrado.</p>';
+      } else {
+        criarTabsEConteudo(consolesFiltrados);
+      }
+    }
+
+    fetch('files.json')
+      .then(response => response.json())
+      .then(data => {
+        consoles = {};
+        data.forEach(item => {
+          const match = item["nome do arquivo"].match(/\((.*?)\)/);
+          const consoleName = match ? match[1] : "Outros";
+          if (!consoles[consoleName]) consoles[consoleName] = [];
+          consoles[consoleName].push(item);
+        });
+        criarTabsEConteudo(consoles);
+      })
+      .catch(error => {
+        const tabsContent = document.getElementById('consoleTabsContent');
+        tabsContent.innerHTML = "<p>Erro ao carregar os arquivos.</p>";
+        console.error('Erro ao carregar JSON:', error);
+      });
+
+    document.getElementById('searchInput').addEventListener('input', e => {
+      filtrarArquivos(e.target.value);
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
