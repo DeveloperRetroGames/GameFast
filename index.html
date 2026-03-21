@@ -1,221 +1,297 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GameFast Downloader</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Biblioteca Digital</title>
+    <!-- Importando ícones para redes sociais -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --azul-fundo: #f0f7ff;
+            --azul-claro: #e3f2fd;
+            --azul-medio: #90caf9;
+            --azul-escuro: #1e88e5;
+            --texto: #2c3e50;
+            --branco: #ffffff;
+            --youtube: #ff0000;
+            --discord: #7289da;
+            --telegram: #0088cc;
+        }
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--azul-fundo);
+            color: var(--texto);
+            margin: 0;
+            padding: 0;
+        }
 
-  <style>
-    body {
-      background-color: #121212;
-      color: #e0e0e0;
-      padding: 20px;
-      font-family: system-ui, sans-serif;
-    }
+        /* Topo do Site */
+        .navbar {
+            background-color: var(--branco);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-    h1 {
-      font-weight: 600;
-      margin-bottom: 20px;
-      color: #90caf9;
-      text-align: center;
-    }
+        .logo img {
+            height: 60px; /* Ajuste o tamanho da sua logo aqui */
+            width: auto;
+        }
 
-    .nav-tabs .nav-link.active {
-      background-color: #1e1e1e;
-      color: #90caf9;
-      border-color: #90caf9 #90caf9 #1e1e1e;
-    }
+        .social-header {
+            display: flex;
+            gap: 15px;
+        }
 
-    .nav-tabs .nav-link {
-      color: #b0b0b0;
-    }
+        .social-header a {
+            font-size: 24px;
+            transition: 0.3s;
+            text-decoration: none;
+        }
 
-    .card {
-      margin: 15px auto;
-      max-width: 300px;
-      background-color: #1e1e1e;
-      color: #fff;
-      border: none;
-      border-radius: 15px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+        .social-header .fa-youtube { color: var(--youtube); }
+        .social-header .fa-discord { color: var(--discord); }
+        .social-header .fa-telegram { color: var(--telegram); }
 
-    .card:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 20px rgba(144, 202, 249, 0.3);
-    }
+        .social-header a:hover { transform: scale(1.2); }
 
-    /* 🔥 IMAGEM SEM CORTES */
-    .card img {
-      height: 200px;
-      width: 100%;
-      object-fit: contain;     /* mostra a imagem inteira */
-      background-color: #000;  /* fundo para sobras */
-      border-radius: 15px 15px 0 0;
-    }
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--azul-escuro);
+            color: white;
+        }
 
-    .card-body {
-      text-align: center;
-    }
+        /* Barra de Busca */
+        .search-container {
+            max-width: 500px;
+            margin: -25px auto 20px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
 
-    .download-btn {
-      margin-top: 10px;
-      background: linear-gradient(135deg, #42a5f5, #1e88e5);
-      border: none;
-    }
+        #searchBar {
+            width: 100%;
+            padding: 15px 25px;
+            border-radius: 30px;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-size: 16px;
+            outline: none;
+        }
 
-    .download-btn:hover {
-      background: linear-gradient(135deg, #64b5f6, #2196f3);
-    }
+        /* Menu de Consoles */
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: var(--azul-claro);
+            border-bottom: 2px solid var(--azul-medio);
+        }
 
-    .tab-content {
-      margin-top: 20px;
-    }
+        .tab-button {
+            background-color: var(--branco);
+            border: 1px solid var(--azul-medio);
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+            transition: 0.2s;
+            color: var(--azul-escuro);
+        }
 
-    #searchInput {
-      max-width: 400px;
-      margin: 0 auto 30px auto;
-      background-color: #1e1e1e;
-      color: #e0e0e0;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 10px 15px;
-    }
+        .tab-button:hover {
+            background-color: var(--azul-medio);
+            color: white;
+        }
 
-    #searchInput::placeholder {
-      color: #b0b0b0;
-    }
-  </style>
+        .tab-button.active {
+            background-color: var(--azul-escuro);
+            color: white;
+            border-color: var(--azul-escuro);
+        }
+
+        /* Grid de Jogos */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            max-width: 1300px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .game-card {
+            background: var(--branco);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover { transform: translateY(-5px); }
+
+        .game-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            background: #f9f9f9;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .game-title {
+            font-size: 0.95em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .download-btn {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .download-btn:hover { background-color: #219150; }
+
+        .loading { text-align: center; grid-column: 1/-1; padding: 50px; font-size: 1.2em; color: var(--azul-escuro); }
+
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 10px; }
+            .games-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+        }
+    </style>
 </head>
-
 <body>
-  <div class="container">
-    <h1>GameFast Downloader</h1>
 
-    <!-- Barra de pesquisa -->
-    <input
-      type="search"
-      id="searchInput"
-      class="form-control"
-      placeholder="🔍 Pesquisar arquivo..."
-      aria-label="Pesquisar arquivo"
-    />
+<!-- Navbar com Logo e Redes Sociais -->
+<div class="navbar">
+    <div class="logo">
+        <!-- COLOQUE O LINK DA SUA LOGO PNG ABAIXO -->
+        <img src="URL_DA_SUA_LOGO_AQUI.png" alt="Logo">
+    </div>
+    <div class="social-header">
+        <a href="https://youtube.com/SEU_CANAL" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://discord.gg/SEU_LINK" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
+        <a href="https://t.me/SEU_LINK" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+    </div>
+</div>
 
-    <ul class="nav nav-tabs justify-content-center mt-3" id="consoleTabs" role="tablist"></ul>
-    <div class="tab-content" id="consoleTabsContent"></div>
-  </div>
+<header>
+    <h1>Portal de Downloads</h1>
+</header>
 
-  <script>
-    let consoles = {};
-    let currentConsole = null;
+<div class="search-container">
+    <input type="text" id="searchBar" placeholder="O que você está procurando?" onkeyup="filterGames()">
+</div>
 
-    function criarTabsEConteudo(consolesData) {
-      const tabs = document.getElementById('consoleTabs');
-      const tabsContent = document.getElementById('consoleTabsContent');
+<div class="tabs-container" id="tabs">
+    <!-- Gerado via JS -->
+</div>
 
-      tabs.innerHTML = '';
-      tabsContent.innerHTML = '';
+<div class="games-grid" id="games-display">
+    <!-- Gerado via JS -->
+</div>
 
-      let isFirst = true;
+<script>
+    // CONFIGURAÇÃO DO GITHUB
+    // Mude para o seu link do GitHub (importante terminar com / )
+    const baseRawUrl = "https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/";
 
-      for (const [consoleName, items] of Object.entries(consolesData)) {
-        const tabId = 'tab-' + consoleName.replace(/\s+/g, '-').toLowerCase();
+    const platforms = {
+        "PS1": "ps1.json", "PS2": "ps2.json", "PS3": "ps3.json",
+        "SNES": "snes.json", "NES": "nes.json", "MEGADRIVE": "megadrive.json",
+        "PACKS": "packs.json", "MASTER SYSTEM": "mastersystem.json",
+        "GBA": "gba.json", "GBA COLOR": "gbc.json", "GBA ADVANCED": "gba_adv.json",
+        "XBOX CLASSICO": "xbox_classico.json", "XBOX 360": "xbox360.json",
+        "NINTENDO WII": "wii.json", "NINTENDO WII U": "wiiu.json",
+        "GAMECUBE": "gamecube.json", "DEV MODE": "devmode.json", "FBNEO": "fbneo.json"
+    };
 
-        const li = document.createElement('li');
-        li.className = 'nav-item';
+    let currentData = [];
+    const tabsContainer = document.getElementById('tabs');
+    const gamesDisplay = document.getElementById('games-display');
+    const searchBar = document.getElementById('searchBar');
 
-        const button = document.createElement('button');
-        button.className = 'nav-link' + (isFirst ? ' active' : '');
-        button.dataset.bsToggle = 'tab';
-        button.dataset.bsTarget = '#' + tabId;
-        button.type = 'button';
-        button.role = 'tab';
-        button.textContent = consoleName;
-
-        li.appendChild(button);
-        tabs.appendChild(li);
-
-        const tabPane = document.createElement('div');
-        tabPane.className = 'tab-pane fade' + (isFirst ? ' show active' : '');
-        tabPane.id = tabId;
-
-        const row = document.createElement('div');
-        row.className = 'row justify-content-center';
-
-        items.forEach(item => {
-          const col = document.createElement('div');
-          col.className = 'col-md-4';
-
-          const card = document.createElement('div');
-          card.className = 'card';
-
-          const img = document.createElement('img');
-          img.src = item["Link da Capa"];
-          img.alt = item["nome do arquivo"];
-          img.loading = "lazy";
-
-          const cardBody = document.createElement('div');
-          cardBody.className = 'card-body';
-
-          const title = document.createElement('h6');
-          title.textContent = item["nome do arquivo"];
-
-          const downloadBtn = document.createElement('a');
-          downloadBtn.href = item["Link do arquivo"];
-          downloadBtn.className = 'btn btn-primary download-btn';
-          downloadBtn.textContent = '⬇️ Baixar';
-          downloadBtn.target = '_blank';
-
-          cardBody.appendChild(title);
-          cardBody.appendChild(downloadBtn);
-
-          card.appendChild(img);
-          card.appendChild(cardBody);
-          col.appendChild(card);
-          row.appendChild(col);
+    function createTabs() {
+        Object.keys(platforms).forEach((name, index) => {
+            const btn = document.createElement('button');
+            btn.classList.add('tab-button');
+            btn.innerText = name;
+            btn.onclick = () => loadTab(name, btn);
+            tabsContainer.appendChild(btn);
+            if(index === 0) loadTab(name, btn); // Carrega a primeira automaticamente
         });
-
-        tabPane.appendChild(row);
-        tabsContent.appendChild(tabPane);
-
-        isFirst = false;
-      }
     }
 
-    function filtrarArquivos(texto) {
-      texto = texto.toLowerCase();
+    async function loadTab(name, element) {
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        element.classList.add('active');
+        searchBar.value = ""; 
 
-      const filtrado = {};
-      for (const [consoleName, items] of Object.entries(consoles)) {
-        const itens = items.filter(item =>
-          item["nome do arquivo"].toLowerCase().includes(texto)
-        );
-        if (itens.length) filtrado[consoleName] = itens;
-      }
+        gamesDisplay.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Buscando arquivos...</div>';
 
-      criarTabsEConteudo(filtrado);
+        try {
+            const response = await fetch(baseRawUrl + platforms[name]);
+            if (!response.ok) throw new Error();
+            currentData = await response.json();
+            renderGames(currentData);
+        } catch (error) {
+            gamesDisplay.innerHTML = `<div class="loading">Nenhum arquivo encontrado em "${name}".<br><small>Verifique se o arquivo ${platforms[name]} existe no GitHub.</small></div>`;
+            currentData = [];
+        }
     }
 
-    fetch('files.json')
-      .then(res => res.json())
-      .then(data => {
+    function renderGames(data) {
+        gamesDisplay.innerHTML = '';
+        if(data.length === 0) {
+            gamesDisplay.innerHTML = '<div class="loading">Nenhum resultado.</div>';
+            return;
+        }
+
         data.forEach(item => {
-          const match = item["nome do arquivo"].match(/\((.*?)\)/);
-          const consoleName = match ? match[1] : "Outros";
-
-          if (!consoles[consoleName]) consoles[consoleName] = [];
-          consoles[consoleName].push(item);
+            const card = document.createElement('div');
+            card.classList.add('game-card');
+            card.innerHTML = `
+                <img src="${item["Link da Capa"]}" onerror="this.src='https://via.placeholder.com/200x250?text=Sem+Capa'">
+                <div class="game-title">${item["nome do arquivo"]}</div>
+                <a href="${item["Link do arquivo"]}" target="_blank" class="download-btn"><i class="fas fa-download"></i> Download</a>
+            `;
+            gamesDisplay.appendChild(card);
         });
+    }
 
-        criarTabsEConteudo(consoles);
-      });
+    function filterGames() {
+        const term = searchBar.value.toLowerCase();
+        const filtered = currentData.filter(game => 
+            game["nome do arquivo"].toLowerCase().includes(term)
+        );
+        renderGames(filtered);
+    }
 
-    document.getElementById('searchInput')
-      .addEventListener('input', e => filtrarArquivos(e.target.value));
-  </script>
+    createTabs();
+</script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
