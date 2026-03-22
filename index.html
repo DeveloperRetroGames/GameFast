@@ -144,7 +144,6 @@
             color: var(--texto);
         }
 
-        /* Botão de download estilizado (não é mais uma tag <a>) */
         .btn-download {
             background-color: #2ecc71;
             color: white;
@@ -161,9 +160,7 @@
             gap: 8px;
         }
 
-        .btn-download:hover {
-            background-color: #27ae60;
-        }
+        .btn-download:hover { background-color: #27ae60; }
 
         .loading-msg { grid-column: 1/-1; text-align: center; padding: 50px; font-size: 18px; color: var(--azul-escuro); }
 
@@ -181,14 +178,14 @@
     </div>
     <div class="social-links">
         <a href="https://www.youtube.com/@GameFastDownloder" target="_blank"><i class="fab fa-youtube"></i></a>
-        <a href="hhttps://discord.gg/mU9hede8gT" target="_blank"><i class="fab fa-discord"></i></a>
-        <a href="https://t.me/SEU_LINK" target="_blank"><i class="fab fa-telegram"></i></a>
+        <a href="https://discord.gg/mU9hede8gT" target="_blank"><i class="fab fa-discord"></i></a>
+        <a href="EM BREVE" target="_blank"><i class="fab fa-telegram"></i></a>
     </div>
 </nav>
 
 <header>
     <h1>GameFast Downloader</h1>
-    <p>Downloads Seguros, organizados e rapidos!</p>
+    <p>Downloads Rapidos, seguros e sem anuncios!</p>
 </header>
 
 <div class="search-box">
@@ -236,7 +233,7 @@
         document.getElementById('searchBar').value = "";
         currentPlatformName = platform.name;
 
-        display.innerHTML = '<div class="loading-msg"><i class="fas fa-circle-notch fa-spin"></i> Sincronizando arquivos...</div>';
+        display.innerHTML = '<div class="loading-msg"><i class="fas fa-circle-notch fa-spin"></i> Carregando...</div>';
 
         try {
             const response = await fetch(BASE_URL + platform.file);
@@ -244,32 +241,23 @@
             currentItems = await response.json();
             render(currentItems);
         } catch (err) {
-            display.innerHTML = `<div class="loading-msg">Erro ao carregar lista de ${platform.name}.</div>`;
+            display.innerHTML = `<div class="loading-msg">Erro ao carregar lista.</div>`;
         }
     }
 
     function render(data) {
         display.innerHTML = "";
-        if (data.length === 0) {
-            display.innerHTML = '<div class="loading-msg">Nenhum item encontrado.</div>';
-            return;
-        }
-
         data.forEach(item => {
-            const nomeArquivo = item["nome do arquivo"];
-            const linkDownload = item["Link do arquivo"];
-            
-            // Gerar link da capa automaticamente
-            const urlCapa = `${BASE_URL}covers/${encodeURIComponent(currentPlatformName)}/${encodeURIComponent(nomeArquivo)}.png`;
+            const nome = item["nome do arquivo"];
+            const link = item["Link do arquivo"];
+            const urlCapa = `${BASE_URL}covers/${encodeURIComponent(currentPlatformName)}/${encodeURIComponent(nome)}.png`;
 
             const card = document.createElement('div');
             card.className = "card";
-            
-            // Criamos o botão que chama a função de download ao clicar
             card.innerHTML = `
                 <img src="${urlCapa}" onerror="this.src='https://via.placeholder.com/200x240?text=Sem+Capa'">
-                <div class="card-title">${nomeArquivo}</div>
-                <button class="btn-download" onclick="safeDownload('${linkDownload}')">
+                <div class="card-title">${nome}</div>
+                <button class="btn-download" onclick="startDownload('${link}')">
                     <i class="fas fa-download"></i> Download
                 </button>
             `;
@@ -277,17 +265,22 @@
         });
     }
 
-    // FUNÇÃO QUE ESCONDE O LINK
-    // Em vez de um link direto, o JS abre a URL em uma nova aba
-    function safeDownload(url) {
-        window.open(url, '_blank');
+    // FUNÇÃO DE DOWNLOAD NA MESMA GUIA
+    function startDownload(url) {
+        // Método 1: Tenta disparar o download sem sair da página
+        // Funciona perfeitamente para arquivos diretos (.zip, .pkg, .rar)
+        const link = document.createElement('a');
+        link.href = url;
+        // O atributo 'download' reforça que é um arquivo, não uma página
+        link.setAttribute('download', ''); 
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     function search() {
         const query = document.getElementById('searchBar').value.toLowerCase();
-        const filtered = currentItems.filter(item => 
-            item["nome do arquivo"].toLowerCase().includes(query)
-        );
+        const filtered = currentItems.filter(item => item["nome do arquivo"].toLowerCase().includes(query));
         render(filtered);
     }
 
