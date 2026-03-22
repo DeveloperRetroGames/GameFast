@@ -3,294 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Biblioteca Digital</title>
-    <!-- Importando ícones para redes sociais -->
+    <title>GameFast Downloader</title>
+    <!-- Ícones FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --azul-fundo: #f0f7ff;
-            --azul-claro: #e3f2fd;
-            --azul-medio: #90caf9;
-            --azul-escuro: #1e88e5;
-            --texto: #2c3e50;
+            --azul-fundo: #f0f8ff;
+            --azul-claro: #e1f5fe;
+            --azul-medio: #4fc3f7;
+            --azul-escuro: #0288d1;
+            --texto: #263238;
             --branco: #ffffff;
             --youtube: #ff0000;
-            --discord: #7289da;
+            --discord: #5865F2;
             --telegram: #0088cc;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--azul-fundo);
             color: var(--texto);
             margin: 0;
             padding: 0;
         }
 
-        /* Topo do Site */
+        /* Navbar */
         .navbar {
             background-color: var(--branco);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 10px 5%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .logo img {
-            height: 60px; /* Ajuste o tamanho da sua logo aqui */
+            height: 50px;
             width: auto;
+            display: block;
         }
 
-        .social-header {
+        .social-links {
             display: flex;
-            gap: 15px;
+            gap: 20px;
         }
 
-        .social-header a {
+        .social-links a {
             font-size: 24px;
-            transition: 0.3s;
+            transition: transform 0.3s;
             text-decoration: none;
         }
 
-        .social-header .fa-youtube { color: var(--youtube); }
-        .social-header .fa-discord { color: var(--discord); }
-        .social-header .fa-telegram { color: var(--telegram); }
+        .social-links .fa-youtube { color: var(--youtube); }
+        .social-links .fa-discord { color: var(--discord); }
+        .social-links .fa-telegram { color: var(--telegram); }
+        .social-links a:hover { transform: translateY(-3px); }
 
-        .social-header a:hover { transform: scale(1.2); }
-
+        /* Header e Busca */
         header {
-            text-align: center;
-            padding: 20px;
-            background-color: var(--azul-escuro);
+            background: linear-gradient(135deg, var(--azul-escuro), var(--azul-medio));
             color: white;
+            padding: 40px 20px;
+            text-align: center;
         }
 
-        /* Barra de Busca */
-        .search-container {
-            max-width: 500px;
-            margin: -25px auto 20px;
-            padding: 0 20px;
-            position: relative;
-            z-index: 10;
+        .search-box {
+            max-width: 600px;
+            margin: -25px auto 0;
+            padding: 0 15px;
         }
 
         #searchBar {
             width: 100%;
             padding: 15px 25px;
-            border-radius: 30px;
+            border-radius: 50px;
             border: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             font-size: 16px;
             outline: none;
         }
 
-        /* Menu de Consoles */
-        .tabs-container {
+        /* Menu de Abas (Sem Scroll) */
+        .tabs-wrapper {
+            background-color: var(--azul-claro);
+            padding: 20px 0;
+            border-bottom: 1px solid #b3e5fc;
             display: flex;
             justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            padding: 20px;
-            background: var(--azul-claro);
-            border-bottom: 2px solid var(--azul-medio);
         }
 
-        .tab-button {
-            background-color: var(--branco);
-            border: 1px solid var(--azul-medio);
-            padding: 8px 16px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 12px;
-            text-transform: uppercase;
-            transition: 0.2s;
-            color: var(--azul-escuro);
-        }
-
-        .tab-button:hover {
-            background-color: var(--azul-medio);
-            color: white;
-        }
-
-        .tab-button.active {
-            background-color: var(--azul-escuro);
-            color: white;
-            border-color: var(--azul-escuro);
-        }
-
-        /* Grid de Jogos */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 25px;
-            max-width: 1300px;
-            margin: 30px auto;
+        .tabs-container {
+            display: flex;
+            flex-wrap: wrap; /* Faz as abas quebrarem linha */
+            justify-content: center;
+            gap: 10px;
+            max-width: 1200px;
             padding: 0 20px;
         }
 
-        .game-card {
+        .tab-btn {
             background: var(--branco);
-            border-radius: 8px;
+            border: 1px solid var(--azul-medio);
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--azul-escuro);
+            transition: 0.3s;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .tab-btn:hover {
+            background: var(--azul-medio);
+            color: white;
+        }
+
+        .tab-btn.active {
+            background: var(--azul-escuro);
+            color: white;
+            border-color: var(--azul-escuro);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Grid de Conteúdo */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: var(--branco);
+            border-radius: 12px;
             padding: 15px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: transform 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: 0.3s;
             display: flex;
             flex-direction: column;
         }
 
-        .game-card:hover { transform: translateY(-5px); }
-
-        .game-card img {
-            width: 100%;
-            height: 250px;
-            object-fit: contain;
-            background: #f9f9f9;
-            border-radius: 4px;
-            margin-bottom: 15px;
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        .game-title {
-            font-size: 0.95em;
+        .card img {
+            width: 100%;
+            height: 240px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+        }
+
+        .card-title {
+            font-size: 14px;
             font-weight: bold;
             margin-bottom: 15px;
             flex-grow: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            color: var(--texto);
+            line-height: 1.4;
         }
 
-        .download-btn {
-            background-color: #27ae60;
+        .download-link {
+            background-color: #2ecc71;
             color: white;
             padding: 10px;
             text-decoration: none;
-            border-radius: 4px;
+            border-radius: 6px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 13px;
             transition: 0.3s;
         }
 
-        .download-btn:hover { background-color: #219150; }
+        .download-link:hover {
+            background-color: #27ae60;
+        }
 
-        .loading { text-align: center; grid-column: 1/-1; padding: 50px; font-size: 1.2em; color: var(--azul-escuro); }
+        .loading-msg {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: var(--azul-escuro);
+        }
 
+        /* Ajustes para Mobile */
         @media (max-width: 768px) {
-            .navbar { flex-direction: column; gap: 10px; }
-            .games-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .navbar { flex-direction: column; gap: 15px; padding: 15px; }
+            .content-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .tab-btn { padding: 6px 12px; font-size: 11px; }
         }
     </style>
 </head>
 <body>
 
-<!-- Navbar com Logo e Redes Sociais -->
-<div class="navbar">
+<nav class="navbar">
     <div class="logo">
-        <!-- COLOQUE O LINK DA SUA LOGO PNG ABAIXO -->
-        <img src="URL_DA_SUA_LOGO_AQUI.png" alt="Logo">
+        <!-- COLOQUE SUA LOGO AQUI -->
+        <img src="https://i4.imageban.ru/out/2026/03/21/894c47e143f8b99166d90293d47975ec.png" alt="Logo">
     </div>
-    <div class="social-header">
-        <a href="https://youtube.com/SEU_CANAL" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
-        <a href="https://discord.gg/SEU_LINK" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
-        <a href="https://t.me/SEU_LINK" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+    <div class="social-links">
+        <a href="https://www.youtube.com/@GameFastDownloder" target="_blank"><i class="fab fa-youtube"></i></a>
+        <a href="https://discord.gg/mU9hede8gT" target="_blank"><i class="fab fa-discord"></i></a>
+        <a href="https://t.me/EM BREVE" target="_blank"><i class="fab fa-telegram"></i></a>
     </div>
-</div>
+</nav>
 
 <header>
-    <h1>Portal de Downloads</h1>
+    <h1>GameFast Downloader</h1>
+    <p>Download rapido e sem anuncios</p>
 </header>
 
-<div class="search-container">
-    <input type="text" id="searchBar" placeholder="O que você está procurando?" onkeyup="filterGames()">
+<div class="search-box">
+    <input type="text" id="searchBar" placeholder="Pesquisar arquivo..." onkeyup="search()">
 </div>
 
-<div class="tabs-container" id="tabs">
-    <!-- Gerado via JS -->
+<div class="tabs-wrapper">
+    <div class="tabs-container" id="tabs">
+        <!-- Abas serão inseridas aqui -->
+    </div>
 </div>
 
-<div class="games-grid" id="games-display">
-    <!-- Gerado via JS -->
+<div class="content-grid" id="display">
+    <!-- Itens serão inseridos aqui -->
 </div>
 
 <script>
-    // CONFIGURAÇÃO DO GITHUB
-    // Mude para o seu link do GitHub (importante terminar com / )
-    const baseRawUrl = "https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/";
+    const BASE_URL = "https://raw.githubusercontent.com/DeveloperRetroGames/games/main/";
 
-    const platforms = {
-        "PS1": "ps1.json", "PS2": "ps2.json", "PS3": "ps3.json",
-        "SNES": "snes.json", "NES": "nes.json", "MEGADRIVE": "megadrive.json",
-        "PACKS": "packs.json", "MASTER SYSTEM": "mastersystem.json",
-        "GBA": "gba.json", "GBA COLOR": "gbc.json", "GBA ADVANCED": "gba_adv.json",
-        "XBOX CLASSICO": "xbox_classico.json", "XBOX 360": "xbox360.json",
-        "NINTENDO WII": "wii.json", "NINTENDO WII U": "wiiu.json",
-        "GAMECUBE": "gamecube.json", "DEV MODE": "devmode.json", "FBNEO": "fbneo.json"
-    };
+    const platforms = [
+        { name: "PS1", file: "ps1.json" },
+        { name: "PS2", file: "ps2.json" },
+        { name: "PS3", file: "ps3.json" },
+        { name: "SNES", file: "snes.json" },
+        { name: "NES", file: "nes.json" },
+        { name: "SEGA 32X", file: "sega32x.json" },
+        { name: "MEGADRIVE", file: "megadrive.json" },
+        { name: "PACKS", file: "packs.json" },
+        { name: "MASTER SYSTEM", file: "mastersystem.json" },
+        { name: "GBA", file: "gba.json" },
+        { name: "GBA COLOR", file: "gbc.json" },
+        { name: "GBA ADVANCED", file: "gba_adv.json" },
+        { name: "XBOX CLASSICO", file: "xbox_classico.json" },
+        { name: "XBOX 360", file: "xbox360.json" },
+        { name: "NINTENDO WII", file: "wii.json" },
+        { name: "NINTENDO WII U", file: "wiiu.json" },
+        { name: "GAMECUBE", file: "gamecube.json" },
+        { name: "DEV MODE", file: "devmode.json" },
+        { name: "FBNEO", file: "fbneo.json" }
+    ];
 
-    let currentData = [];
+    let currentItems = [];
+    const display = document.getElementById('display');
     const tabsContainer = document.getElementById('tabs');
-    const gamesDisplay = document.getElementById('games-display');
-    const searchBar = document.getElementById('searchBar');
 
-    function createTabs() {
-        Object.keys(platforms).forEach((name, index) => {
+    function initTabs() {
+        platforms.forEach((p, index) => {
             const btn = document.createElement('button');
-            btn.classList.add('tab-button');
-            btn.innerText = name;
-            btn.onclick = () => loadTab(name, btn);
+            btn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
+            btn.innerText = p.name;
+            btn.onclick = () => loadPlatform(p.file, btn);
             tabsContainer.appendChild(btn);
-            if(index === 0) loadTab(name, btn); // Carrega a primeira automaticamente
         });
+        loadPlatform(platforms[0].file, tabsContainer.firstChild);
     }
 
-    async function loadTab(name, element) {
-        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-        element.classList.add('active');
-        searchBar.value = ""; 
+    async function loadPlatform(filename, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('searchBar').value = "";
 
-        gamesDisplay.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Buscando arquivos...</div>';
+        display.innerHTML = '<div class="loading-msg"><i class="fas fa-circle-notch fa-spin"></i> Carregando arquivos...</div>';
 
         try {
-            const response = await fetch(baseRawUrl + platforms[name]);
+            const response = await fetch(BASE_URL + filename);
             if (!response.ok) throw new Error();
-            currentData = await response.json();
-            renderGames(currentData);
-        } catch (error) {
-            gamesDisplay.innerHTML = `<div class="loading">Nenhum arquivo encontrado em "${name}".<br><small>Verifique se o arquivo ${platforms[name]} existe no GitHub.</small></div>`;
-            currentData = [];
+            currentItems = await response.json();
+            render(currentItems);
+        } catch (err) {
+            display.innerHTML = `<div class="loading-msg">O arquivo <b>${filename}</b> não foi encontrado no GitHub.</div>`;
         }
     }
 
-    function renderGames(data) {
-        gamesDisplay.innerHTML = '';
-        if(data.length === 0) {
-            gamesDisplay.innerHTML = '<div class="loading">Nenhum resultado.</div>';
+    function render(data) {
+        display.innerHTML = "";
+        if (data.length === 0) {
+            display.innerHTML = '<div class="loading-msg">Nenhum item encontrado.</div>';
             return;
         }
 
         data.forEach(item => {
             const card = document.createElement('div');
-            card.classList.add('game-card');
+            card.className = "card";
             card.innerHTML = `
-                <img src="${item["Link da Capa"]}" onerror="this.src='https://via.placeholder.com/200x250?text=Sem+Capa'">
-                <div class="game-title">${item["nome do arquivo"]}</div>
-                <a href="${item["Link do arquivo"]}" target="_blank" class="download-btn"><i class="fas fa-download"></i> Download</a>
+                <img src="${item["Link da Capa"]}" onerror="this.src='https://via.placeholder.com/200x240?text=Sem+Capa'">
+                <div class="card-title">${item["nome do arquivo"]}</div>
+                <a href="${item["Link do arquivo"]}" target="_blank" class="download-link"><i class="fas fa-download"></i> Download</a>
             `;
-            gamesDisplay.appendChild(card);
+            display.appendChild(card);
         });
     }
 
-    function filterGames() {
-        const term = searchBar.value.toLowerCase();
-        const filtered = currentData.filter(game => 
-            game["nome do arquivo"].toLowerCase().includes(term)
+    function search() {
+        const query = document.getElementById('searchBar').value.toLowerCase();
+        const filtered = currentItems.filter(item => 
+            item["nome do arquivo"].toLowerCase().includes(query)
         );
-        renderGames(filtered);
+        render(filtered);
     }
 
-    createTabs();
+    initTabs();
 </script>
 
 </body>
